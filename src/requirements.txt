@@ -1,0 +1,2 @@
+# Runtime dependencies bundled with the Lambda functions by `sam build`.
+# boto3 is already provided by the Lambda Python runtime.
