@@ -15,6 +15,9 @@ Serverless shop API in Python, running on AWS Lambda behind an API Gateway HTTP 
 ```
 .
 ├── template.yaml          # SAM template (API + functions)
+├── samconfig.toml         # SAM CLI defaults (dev and prod environments)
+├── Makefile               # shortcuts for common tasks
+├── events/                # sample API Gateway events for `sam local invoke`
 ├── src/                   # Lambda code (CodeUri)
 │   ├── requirements.txt   # runtime dependencies bundled by `sam build`
 │   └── shop/
@@ -57,14 +60,19 @@ ruff format .
 sam build
 sam local start-api
 curl http://127.0.0.1:3000/health
+
+# or invoke a single function with a sample event
+sam local invoke HealthFunction --event events/health.json
 ```
+
+`make lint`, `make test`, `make local` and `make invoke` wrap the commands above.
 
 ### Deploy
 
 ```bash
 sam build
-sam deploy --guided              # first deployment, saves samconfig.toml
-sam deploy --parameter-overrides Stage=prod
+sam deploy                       # dev stack, defaults from samconfig.toml
+sam deploy --config-env prod     # prod stack
 ```
 
 The API URL is printed in the `ApiUrl` stack output.

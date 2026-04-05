@@ -1,0 +1,31 @@
+version = 0.1
+
+[default.global.parameters]
+stack_name = "shop-backend-dev"
+
+[default.build.parameters]
+cached = true
+parallel = true
+
+[default.validate.parameters]
+lint = true
+
+[default.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+resolve_s3 = true
+region = "eu-west-3"
+parameter_overrides = "Stage=dev"
+
+[default.local_start_api.parameters]
+warm_containers = "EAGER"
+
+[prod.global.parameters]
+stack_name = "shop-backend-prod"
+
+[prod.deploy.parameters]
+capabilities = "CAPABILITY_IAM"
+confirm_changeset = true
+resolve_s3 = true
+region = "eu-west-3"
+parameter_overrides = "Stage=prod"
