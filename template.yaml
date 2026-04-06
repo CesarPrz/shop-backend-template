@@ -20,8 +20,27 @@ Globals:
       Variables:
         STAGE: !Ref Stage
         LOG_LEVEL: INFO
+        PRODUCTS_TABLE: !Ref ProductsTable
 
 Resources:
+  ProductsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TableName: !Sub shop-products-${Stage}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+
   ShopApi:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -54,3 +73,6 @@ Outputs:
   ApiUrl:
     Description: Base URL of the shop API
     Value: !Sub https://${ShopApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}
+  ProductsTableName:
+    Description: Name of the DynamoDB products table
+    Value: !Ref ProductsTable
