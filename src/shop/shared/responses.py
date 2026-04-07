@@ -21,8 +21,12 @@ def json_response(status_code: int, body: Any, headers: dict[str, str] | None = 
     }
 
 
-def error_response(status_code: int, message: str, code: str | None = None) -> dict:
-    error = {"message": message}
+def error_response(
+    status_code: int, message: str, code: str | None = None, details: list[str] | None = None
+) -> dict:
+    error: dict[str, Any] = {"message": message}
     if code:
         error["code"] = code
+    if details:
+        error["details"] = details
     return json_response(status_code, {"error": error})
