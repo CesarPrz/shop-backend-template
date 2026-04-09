@@ -45,3 +45,11 @@ def test_error_response_without_code():
     body = json.loads(error_response(400, "Invalid payload")["body"])
 
     assert body == {"error": {"message": "Invalid payload"}}
+
+
+def test_error_response_with_details():
+    body = json.loads(
+        error_response(400, "Invalid product payload", code="VALIDATION", details=["x"])["body"]
+    )
+
+    assert body["error"]["details"] == ["x"]
