@@ -1,4 +1,8 @@
+import boto3
 import pytest
+from moto import mock_aws
+
+from shop.shared.db import get_products_table
 
 
 @pytest.fixture
@@ -28,3 +32,26 @@ def http_event():
         }
 
     return _make
+
+
+@pytest.fixture
+def aws_credentials(monkeypatch):
+    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "testing")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
+    monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
+    monkeypatch.setenv("AWS_DEFAULT_REGION", "eu-west-3")
+
+
+@pytest.fixture
+def products_table(aws_credentials, monkeypatch):
+    monkeypatch.setenv("PRODUCTS_TABLE", "shop-products-test")
+    get_products_table.cache_clear()
+    with mock_aws():
+        table = boto3.resource("dynamodb").create_table(
+            TableName="shop-products-test",
+            BillingMode="PAY_PER_REQUEST",
+            AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
+            KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
+        )
+        yield table
+    get_products_table.cache_clear()
