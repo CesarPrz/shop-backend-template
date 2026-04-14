@@ -69,6 +69,50 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${HealthFunction}
       RetentionInDays: 14
 
+  ListProductsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: shop.handlers.products.list_products
+      Description: List products
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProductsTable
+      Events:
+        ListProducts:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ShopApi
+            Path: /products
+            Method: GET
+
+  ListProductsFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${ListProductsFunction}
+      RetentionInDays: 14
+
+  GetProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: shop.handlers.products.get_product
+      Description: Get a product by id
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProductsTable
+      Events:
+        GetProduct:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ShopApi
+            Path: /products/{productId}
+            Method: GET
+
+  GetProductFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${GetProductFunction}
+      RetentionInDays: 14
+
 Outputs:
   ApiUrl:
     Description: Base URL of the shop API
