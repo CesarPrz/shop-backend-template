@@ -113,6 +113,72 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${GetProductFunction}
       RetentionInDays: 14
 
+  CreateProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: shop.handlers.products.create_product
+      Description: Create a product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Events:
+        CreateProduct:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ShopApi
+            Path: /products
+            Method: POST
+
+  CreateProductFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${CreateProductFunction}
+      RetentionInDays: 14
+
+  UpdateProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: shop.handlers.products.update_product
+      Description: Update a product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Events:
+        UpdateProduct:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ShopApi
+            Path: /products/{productId}
+            Method: PATCH
+
+  UpdateProductFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${UpdateProductFunction}
+      RetentionInDays: 14
+
+  DeleteProductFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: shop.handlers.products.delete_product
+      Description: Delete a product
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProductsTable
+      Events:
+        DeleteProduct:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref ShopApi
+            Path: /products/{productId}
+            Method: DELETE
+
+  DeleteProductFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${DeleteProductFunction}
+      RetentionInDays: 14
+
 Outputs:
   ApiUrl:
     Description: Base URL of the shop API

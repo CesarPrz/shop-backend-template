@@ -30,3 +30,7 @@ def error_response(
     if details:
         error["details"] = details
     return json_response(status_code, {"error": error})
+
+
+def empty_response(status_code: int = 204) -> dict:
+    return {"statusCode": status_code, "headers": {}, "body": ""}

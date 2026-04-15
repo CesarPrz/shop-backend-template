@@ -5,7 +5,8 @@ import binascii
 import json
 
 from shop.products import repository
-from shop.shared.responses import error_response, json_response
+from shop.shared.responses import empty_response, error_response, json_response
+from shop.shared.validation import ValidationError, parse_json_body, validate_product
 
 DEFAULT_PAGE_SIZE = 20
 MAX_PAGE_SIZE = 100
@@ -13,6 +14,10 @@ MAX_PAGE_SIZE = 100
 
 def _not_found(product_id: str) -> dict:
     return error_response(404, f"Product {product_id} not found", code="NOT_FOUND")
+
+
+def _invalid(exc: ValidationError) -> dict:
+    return error_response(400, exc.message, code=exc.code, details=exc.details)
 
 
 def _product_id(event: dict) -> str:
@@ -60,3 +65,33 @@ def get_product(event, context):
     if product is None:
         return _not_found(product_id)
     return json_response(200, product)
+
+
+def create_product(event, context):
+    try:
+        fields = validate_product(parse_json_body(event))
+    except ValidationError as exc:
+        return _invalid(exc)
+
+    product = repository.create_product(fields)
+    return json_response(201, product, headers={"Location": f"/products/{product['id']}"})
+
+
+def update_product(event, context):
+    product_id = _product_id(event)
+    try:
+        fields = validate_product(parse_json_body(event), partial=True)
+    except ValidationError as exc:
+        return _invalid(exc)
+
+    product = repository.update_product(product_id, fields)
+    if product is None:
+        return _not_found(product_id)
+    return json_response(200, product)
+
+
+def delete_product(event, context):
+    product_id = _product_id(event)
+    if not repository.delete_product(product_id):
+        return _not_found(product_id)
+    return empty_response(204)
