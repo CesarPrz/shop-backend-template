@@ -3,7 +3,7 @@ from decimal import Decimal
 
 import pytest
 
-from shop.shared.responses import error_response, json_response
+from shop.shared.responses import empty_response, error_response, json_response
 
 
 def test_json_response_defaults():
@@ -53,3 +53,7 @@ def test_error_response_with_details():
     )
 
     assert body["error"]["details"] == ["x"]
+
+
+def test_empty_response():
+    assert empty_response() == {"statusCode": 204, "headers": {}, "body": ""}
