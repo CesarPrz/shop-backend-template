@@ -1,4 +1,4 @@
-.PHONY: install lint format test build local invoke deploy
+.PHONY: install lint format test build local invoke invoke-products deploy
 
 install:
 	pip install -r requirements-dev.txt
@@ -22,6 +22,10 @@ local: build
 
 invoke: build
 	sam local invoke HealthFunction --event events/health.json
+
+invoke-products: build
+	sam local invoke ListProductsFunction --event events/list-products.json
+	sam local invoke CreateProductFunction --event events/create-product.json
 
 deploy: build
 	sam deploy

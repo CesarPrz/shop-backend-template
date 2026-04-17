@@ -1,0 +1,23 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /products",
+  "rawPath": "/products",
+  "rawQueryString": "",
+  "headers": {
+    "accept": "application/json",
+    "content-type": "application/json"
+  },
+  "requestContext": {
+    "http": {
+      "method": "POST",
+      "path": "/products",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "127.0.0.1",
+      "userAgent": "curl/8.0"
+    },
+    "routeKey": "POST /products",
+    "stage": "dev"
+  },
+  "body": "{\"name\": \"T-shirt\", \"description\": \"Organic cotton\", \"price\": 19.99, \"stock\": 25, \"category\": \"clothes\"}",
+  "isBase64Encoded": false
+}

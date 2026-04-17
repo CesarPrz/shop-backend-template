@@ -1,0 +1,24 @@
+{
+  "version": "2.0",
+  "routeKey": "GET /products",
+  "rawPath": "/products",
+  "rawQueryString": "limit=10",
+  "headers": {
+    "accept": "application/json"
+  },
+  "queryStringParameters": {
+    "limit": "10"
+  },
+  "requestContext": {
+    "http": {
+      "method": "GET",
+      "path": "/products",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "127.0.0.1",
+      "userAgent": "curl/8.0"
+    },
+    "routeKey": "GET /products",
+    "stage": "dev"
+  },
+  "isBase64Encoded": false
+}
